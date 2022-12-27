@@ -1,6 +1,7 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include <GL/glew.h>    // include GLEW and new version of GL on Windows
 #include <GLFW/glfw3.h> // GLFW helper library
-#include <stdio.h>
 
 GLFWAPI GLFWwindow* startGlfwAndCreateWindow(int x, int y)
 {
@@ -36,6 +37,43 @@ GLFWAPI GLFWwindow* startGlfwAndCreateWindow(int x, int y)
   return window;
 }
 
+char *getFileContents(char *filePath)
+{
+
+  /* declare a file pointer */
+  FILE *infile;
+  char *buffer;
+  long numbytes;
+
+  infile = fopen(filePath, "r");
+  if (infile == NULL)
+    return NULL;
+
+  /* Get the number of bytes */
+  fseek(infile, 0L, SEEK_END);
+  numbytes = ftell(infile);
+
+  /* reset the file position indicator to
+  the beginning of the file */
+  fseek(infile, 0L, SEEK_SET);
+
+  /* grab sufficient memory for the
+  buffer to hold the text */
+  buffer = (char *)calloc(numbytes, sizeof(char));
+
+  /* memory error */
+  if (buffer == NULL)
+    return NULL;
+
+  /* copy all the text into the buffer */
+  fread(buffer, sizeof(char), numbytes, infile);
+  fclose(infile);
+
+  /* free the memory we used for the buffer */
+  // free(buffer);
+  return buffer;
+}
+
 int main()
 {
   GLFWwindow *window = startGlfwAndCreateWindow(640, 480);
@@ -68,19 +106,15 @@ int main()
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
   /* _____________________________Create shaders_______________________________________ */
-  const char *vertex_shader =
-      "#version 400\n"
-      "in vec3 vp;"
-      "void main() {"
-      "  gl_Position = vec4(vp, 1.0);"
-      "}";
+  const char *vertex_shader = getFileContents("src/shaders/vertex_shader.txt");
+  if (vertex_shader == NULL) {
+    return 1;
+  }
 
-  const char *fragment_shader =
-      "#version 400\n"
-      "out vec4 frag_colour;"
-      "void main() {"
-      "  frag_colour = vec4(0.5, 0.0, 0.5, 1.0);"
-      "}";
+  const char *fragment_shader = getFileContents("src/shaders/fragment_shader.txt");
+  if (fragment_shader == NULL) {
+    return 1;
+  }
 
   GLuint vs = glCreateShader(GL_VERTEX_SHADER);
   glShaderSource(vs, 1, &vertex_shader, NULL);
@@ -109,6 +143,8 @@ int main()
   }
 
   // close GL context and any other GLFW resources
+  free((char*)vertex_shader);
+  free((char*)fragment_shader);
   glfwTerminate();
   return 0;
 }
