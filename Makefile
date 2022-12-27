@@ -12,7 +12,9 @@ VENDOR_INCLUDES=-Ivendor/glfw-3.3.8/include -Ibuild/glew/include -Ivendor
 
 TARGET=-framework Cocoa -framework OpenGL -framework IOKit
 
-all: $(MAIN)
+all: glfw glew build-src
+
+build-src: $(MAIN)
 	$(CC) $(CFLAGS) $(VENDOR_INCLUDES) $(BINS) $(MAIN) $(TARGET)
 
 glfw: $(GLFW)
@@ -21,4 +23,4 @@ glew: $(GLEW)
 	cd $(GLEW)/auto && make && cd ./.. && make all && make install GLEW_DEST=./../../build/glew
 
 clean: 
-	rm -dr *.o *.out *.dSYM
+	rm -dr *.o *.out *.dSYM build/glfw/* build/glew/*
