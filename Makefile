@@ -14,6 +14,9 @@ TARGET=-framework Cocoa -framework OpenGL -framework IOKit
 
 all: glfw glew build-src
 
+run: build-src
+	./a.out
+
 build-src: $(MAIN)
 	$(CC) $(CFLAGS) $(VENDOR_INCLUDES) $(BINS) $(MAIN) $(TARGET)
 

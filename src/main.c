@@ -2,27 +2,25 @@
 #include <GLFW/glfw3.h> // GLFW helper library
 #include <stdio.h>
 
-int main()
+GLFWAPI GLFWwindow* startGlfwAndCreateWindow(int x, int y)
 {
-  // start GL context and O/S window using the GLFW helper library
   if (!glfwInit())
   {
     fprintf(stderr, "ERROR: could not start GLFW3\n");
-    return 1;
+    return NULL;
   }
 
-  // uncomment these lines if on Apple OS X
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-  GLFWwindow *window = glfwCreateWindow(640, 480, "Hello Triangle", NULL, NULL);
+  GLFWwindow *window = glfwCreateWindow(x, y, "Hello Triangle", NULL, NULL);
   if (!window)
   {
     fprintf(stderr, "ERROR: could not open window with GLFW3\n");
     glfwTerminate();
-    return 1;
+    return NULL;
   }
   glfwMakeContextCurrent(window);
 
@@ -30,27 +28,38 @@ int main()
   glewExperimental = GL_TRUE;
   glewInit();
 
-  // get version info
-  const GLubyte *renderer = glGetString(GL_RENDERER); // get renderer string
-  const GLubyte *version = glGetString(GL_VERSION);   // version as a string
+  const GLubyte *renderer = glGetString(GL_RENDERER);
+  const GLubyte *version = glGetString(GL_VERSION);
   printf("Renderer: %s\n", renderer);
   printf("OpenGL version supported %s\n", version);
+
+  return window;
+}
+
+int main()
+{
+  GLFWwindow *window = startGlfwAndCreateWindow(640, 480);
+  if (!window) {
+    return 1;
+  }
 
   // tell GL to only draw onto a pixel if the shape is closer to the viewer
   glEnable(GL_DEPTH_TEST); // enable depth-testing
   glDepthFunc(GL_LESS);    // depth-testing interprets a smaller value as "closer"
 
-  /* OTHER STUFF GOES HERE NEXT */
+  /* _____________________________Define triangle vertices_____________________________ */
   float points[] = {
       0.0f, 0.5f, 0.0f,
       0.5f, -0.5f, 0.0f,
       -0.5f, -0.5f, 0.0f};
 
+  /* _____________________________Create vertex buffer object__________________________ */
   GLuint vbo = 0;
   glGenBuffers(1, &vbo);
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
   glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(float), points, GL_STATIC_DRAW);
 
+  /* _____________________________Create vertex array object___________________________ */
   GLuint vao = 0;
   glGenVertexArrays(1, &vao);
   glBindVertexArray(vao);
@@ -58,6 +67,7 @@ int main()
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
+  /* _____________________________Create shaders_______________________________________ */
   const char *vertex_shader =
       "#version 400\n"
       "in vec3 vp;"
