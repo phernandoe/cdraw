@@ -70,12 +70,12 @@ int main()
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
   /* _____________________________Create shaders_______________________________________ */
-  const char *vertex_shader = getFileContents("src/shaders/vertex_shader.txt");
+  const char *vertex_shader = getFileContents("src/shaders/vertex_shader.glsl");
   if (vertex_shader == NULL) {
     return 1;
   }
 
-  const char *fragment_shader = getFileContents("src/shaders/fragment_shader.txt");
+  const char *fragment_shader = getFileContents("src/shaders/fragment_shader.glsl");
   if (fragment_shader == NULL) {
     return 1;
   }
