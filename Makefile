@@ -5,6 +5,7 @@ GLEW=vendor/glew-2.2.0
 GLFW=vendor/glfw-3.3.8
 
 MAIN=src/main.c
+UTILS=src/util/*.c
 
 BINS=build/glew/lib/libGLEW.a build/glfw/src/libglfw3.a
 # TODO: Do I need these inlcudes here?
@@ -18,7 +19,7 @@ run: build-src
 	./a.out
 
 build-src: $(MAIN)
-	$(CC) $(CFLAGS) $(VENDOR_INCLUDES) $(BINS) $(MAIN) $(TARGET)
+	$(CC) $(CFLAGS) $(VENDOR_INCLUDES) $(BINS) $(MAIN) $(UTILS) $(TARGET)
 
 glfw: $(GLFW)
 	cmake -S vendor/glfw-3.3.8 -B build/glfw && cmake --build build/glfw
