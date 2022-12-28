@@ -4,7 +4,26 @@
 #include <GLFW/glfw3.h> // GLFW helper library
 #include "util/getFileContents.h"
 
-GLFWAPI GLFWwindow* startGlfwAndCreateWindow(int x, int y)
+/*
+ * 3-dimensional points are defined in the X, Y, Z pattern.
+ * 2-dimensional points are defined in the X, Y pattern.
+ *
+ *     0.5f, -0.5f, 0.0f  ->  /\
+ *                           /  \
+ *                          /    \
+ *  0.0f,  0.5f, 0.0f  ->  /______\  <-  -0.5f, -0.5f, 0.0f
+ */
+float *createPoints()
+{
+  static float points[] = {
+      0.0f, 0.5f, 0.0f,
+      0.5f, -0.5f, 0.0f,
+      -0.5f, -0.5f, 0.0f};
+
+  return points;
+}
+
+GLFWAPI GLFWwindow *startGlfwAndCreateWindow(int x, int y)
 {
   if (!glfwInit())
   {
@@ -41,7 +60,8 @@ GLFWAPI GLFWwindow* startGlfwAndCreateWindow(int x, int y)
 int main()
 {
   GLFWwindow *window = startGlfwAndCreateWindow(640, 480);
-  if (!window) {
+  if (!window)
+  {
     return 1;
   }
 
@@ -50,10 +70,7 @@ int main()
   glDepthFunc(GL_LESS);    // depth-testing interprets a smaller value as "closer"
 
   /* _____________________________Define triangle vertices_____________________________ */
-  float points[] = {
-      0.0f, 0.5f, 0.0f,
-      0.5f, -0.5f, 0.0f,
-      -0.5f, -0.5f, 0.0f};
+  float *points = createPoints();
 
   /* _____________________________Create vertex buffer object__________________________ */
   GLuint vbo = 0;
@@ -71,12 +88,14 @@ int main()
 
   /* _____________________________Create shaders_______________________________________ */
   const char *vertex_shader = getFileContents("src/shaders/vertex_shader.glsl");
-  if (vertex_shader == NULL) {
+  if (vertex_shader == NULL)
+  {
     return 1;
   }
 
   const char *fragment_shader = getFileContents("src/shaders/fragment_shader.glsl");
-  if (fragment_shader == NULL) {
+  if (fragment_shader == NULL)
+  {
     return 1;
   }
 
@@ -96,6 +115,7 @@ int main()
   {
     // wipe the drawing surface clear
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     glUseProgram(shader_programme);
     glBindVertexArray(vao);
     // draw points 0-3 from the currently bound VAO with current in-use shader
@@ -107,8 +127,8 @@ int main()
   }
 
   // close GL context and any other GLFW resources
-  free((char*)vertex_shader);
-  free((char*)fragment_shader);
+  free((char *)vertex_shader);
+  free((char *)fragment_shader);
   glfwTerminate();
   return 0;
 }
