@@ -99,7 +99,7 @@ int main()
     return 1;
   }
 
-  GLuint vs = glCreateShader(GL_VERTEX_SHADER);
+  GLuint vs = glCreateShader(GL_VERTEX_SHADER); // glCreateShader returns an ID
   glShaderSource(vs, 1, &vertex_shader, NULL);
   glCompileShader(vs);
   GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);

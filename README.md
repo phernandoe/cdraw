@@ -3,9 +3,12 @@
 ## Building the project
 ### Building GFLW
 Requirements: 
-- `cmake`
+- `cmake` (on Mac, run `brew install cmake)
 1. Run `make all`.
 2. Run `make run`.
+
+Development:
+All your changes should be in the `src` directory. You should only need to run `make all` once to build GLFW and GLEW. To build the `src`, run `make src`. 
 
 #### TODO
 [] memory profiler
