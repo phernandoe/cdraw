@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <GL/glew.h>    // include GLEW and new version of GL on Windows
+#include <string.h>
+#include <GL/glew.h>    // include GLEW
 #include <GLFW/glfw3.h> // GLFW helper library
 #include "util/getFileContents.h"
 
@@ -8,19 +9,35 @@
  * 3-dimensional points are defined in the X, Y, Z pattern.
  * 2-dimensional points are defined in the X, Y pattern.
  *
- *     0.5f, -0.5f, 0.0f  ->  /\
- *                           /  \
- *                          /    \
- *  0.0f,  0.5f, 0.0f  ->  /______\  <-  -0.5f, -0.5f, 0.0f
+ *       0.0f, 0.5f, 0.0f   ->  /\
+ *                             /  \
+ *                            /    \
+ *  -0.5f,  -0.5f, 0.0f  ->  /______\  <-  0.5f, -0.5f, 0.0f
  */
 float *createPoints()
 {
-  static float points[] = {
-      0.0f, 0.5f, 0.0f,
-      0.5f, -0.5f, 0.0f,
-      -0.5f, -0.5f, 0.0f};
+    // TODO: clean this function up, maybe create a utility for appending to array?
+  static float sideA[] = {
+      -0.5f, -0.5f, 0.0f,
+      -0.5f, 0.5f, 0.0f,
+      -0.25f, -0.5f, 0.0f,
+      -0.25f, 0.5f, 0.0f,
+      -0.5f, 0.5f, 0.0f,
+      -0.25f, -0.5f, 0.0f
+  };
 
-  return points;
+//  static float sideB[] = {
+//      -0.25f, 0.5f, 0.0f,
+//      -0.5f, 0.5f, 0.0f,
+//      -0.25f, -0.5f, 0.0f};
+
+//  memcpy(sideA, sideB, 9 * sizeof(float)); // floats are 4 bytes
+//  int i;
+//  for (i = 0; i < 18; i++) {
+//    char coordinate[] = {'X', 'Y', 'Z'};
+//    printf("(%d)%c: %f\n", i, coordinate[i % 3], sideA[i]);
+//  }
+  return sideA;
 }
 
 GLFWAPI GLFWwindow *startGlfwAndCreateWindow(int x, int y)
@@ -76,7 +93,7 @@ int main()
   GLuint vbo = 0;
   glGenBuffers(1, &vbo);
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(float), points, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, 9 * 2 * sizeof(float), points, GL_STATIC_DRAW);
 
   /* _____________________________Create vertex array object___________________________ */
   GLuint vao = 0;
@@ -119,7 +136,8 @@ int main()
     glUseProgram(shader_programme);
     glBindVertexArray(vao);
     // draw points 0-3 from the currently bound VAO with current in-use shader
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
     // update other events like input handling
     glfwPollEvents();
     // put the stuff we've been drawing onto the display
