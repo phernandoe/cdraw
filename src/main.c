@@ -4,6 +4,7 @@
 #include <GL/glew.h>    // include GLEW
 #include <GLFW/glfw3.h> // GLFW helper library
 #include "util/getFileContents.h"
+#include "vertex/vao.h"
 
 /*
  * 3-dimensional points are defined in the X, Y, Z pattern.
@@ -96,19 +97,13 @@ int main()
   glBufferData(GL_ARRAY_BUFFER, 9 * 2 * sizeof(float), points, GL_STATIC_DRAW);
 
   /* _____________________________Create vertex array object___________________________ */
-  GLuint vao_a = 0;
-  glGenVertexArrays(1, &vao_a);
-  glBindVertexArray(vao_a);
-  glEnableVertexAttribArray(0);
-  glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+  struct VAO vao_a = createVAO();
+  bindVBO(vbo);
+  setVertexAttributes(0, 3, 0);
 
-  GLuint vao_b = 0;
-  glGenVertexArrays(1, &vao_b);
-  glBindVertexArray(vao_b);
-  glEnableVertexAttribArray(0);
-  glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+  struct VAO vao_b = createVAO();
+  bindVBO(vbo);
+  setVertexAttributes(0, 3, 0);
 
   /* _____________________________Create shaders_______________________________________ */
   const char *vertex_shader = getFileContents("src/shaders/vertex_shader.glsl");
@@ -161,12 +156,12 @@ int main()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glUseProgram(shader_programme_a);
-    glBindVertexArray(vao_a);
+    bindVAO(vao_a);
     // draw points 0-3 from the currently bound VAO with current in-use shader
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
     glUseProgram(shader_programme_b);
-    glBindVertexArray(vao_b);
+    bindVAO(vao_b);
     glDrawArrays(GL_TRIANGLES, 3, 3);
 
     // update other events like input handling
