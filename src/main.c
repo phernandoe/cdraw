@@ -96,9 +96,16 @@ int main()
   glBufferData(GL_ARRAY_BUFFER, 9 * 2 * sizeof(float), points, GL_STATIC_DRAW);
 
   /* _____________________________Create vertex array object___________________________ */
-  GLuint vao = 0;
-  glGenVertexArrays(1, &vao);
-  glBindVertexArray(vao);
+  GLuint vao_a = 0;
+  glGenVertexArrays(1, &vao_a);
+  glBindVertexArray(vao_a);
+  glEnableVertexAttribArray(0);
+  glBindBuffer(GL_ARRAY_BUFFER, vbo);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+
+  GLuint vao_b = 0;
+  glGenVertexArrays(1, &vao_b);
+  glBindVertexArray(vao_b);
   glEnableVertexAttribArray(0);
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
@@ -116,27 +123,51 @@ int main()
     return 1;
   }
 
-  GLuint vs = glCreateShader(GL_VERTEX_SHADER); // glCreateShader returns an ID
-  glShaderSource(vs, 1, &vertex_shader, NULL);
-  glCompileShader(vs);
-  GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
-  glShaderSource(fs, 1, &fragment_shader, NULL);
-  glCompileShader(fs);
+  GLuint vs_a = glCreateShader(GL_VERTEX_SHADER); // glCreateShader returns an ID
+  glShaderSource(vs_a, 1, &vertex_shader, NULL);
+  glCompileShader(vs_a);
+  GLuint fs_a = glCreateShader(GL_FRAGMENT_SHADER);
+  glShaderSource(fs_a, 1, &fragment_shader, NULL);
+  glCompileShader(fs_a);
 
-  GLuint shader_programme = glCreateProgram();
-  glAttachShader(shader_programme, fs);
-  glAttachShader(shader_programme, vs);
-  glLinkProgram(shader_programme);
+  GLuint shader_programme_a = glCreateProgram();
+  glAttachShader(shader_programme_a, fs_a);
+  glAttachShader(shader_programme_a, vs_a);
+  glLinkProgram(shader_programme_a);
+
+  // shader b
+
+  const char *fragment_shader_b = getFileContents("src/shaders/fragment_shader_b.glsl");
+  if (fragment_shader_b == NULL)
+  {
+    return 1;
+  }
+
+  GLuint vs_b = glCreateShader(GL_VERTEX_SHADER); // glCreateShader returns an ID
+  glShaderSource(vs_b, 1, &vertex_shader, NULL);
+  glCompileShader(vs_b);
+  GLuint fs_b = glCreateShader(GL_FRAGMENT_SHADER);
+  glShaderSource(fs_b, 1, &fragment_shader_b, NULL);
+  glCompileShader(fs_b);
+
+  GLuint shader_programme_b = glCreateProgram();
+  glAttachShader(shader_programme_b, fs_b);
+  glAttachShader(shader_programme_b, vs_b);
+  glLinkProgram(shader_programme_b);
 
   while (!glfwWindowShouldClose(window))
   {
     // wipe the drawing surface clear
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glUseProgram(shader_programme);
-    glBindVertexArray(vao);
+    glUseProgram(shader_programme_a);
+    glBindVertexArray(vao_a);
     // draw points 0-3 from the currently bound VAO with current in-use shader
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    glUseProgram(shader_programme_b);
+    glBindVertexArray(vao_b);
+    glDrawArrays(GL_TRIANGLES, 3, 3);
 
     // update other events like input handling
     glfwPollEvents();
