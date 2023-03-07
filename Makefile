@@ -5,6 +5,7 @@ GLEW=vendor/glew-2.2.0
 GLFW=vendor/glfw-3.3.8
 
 MAIN=src/main.c
+LOG=src/log/*.c
 UTILS=src/util/*.c
 VERTEX=src/vertex/*.c
 
@@ -20,7 +21,7 @@ run: build-src
 	./a.out
 
 build-src: $(MAIN)
-	$(CC) $(CFLAGS) $(VENDOR_INCLUDES) $(BINS) $(MAIN) $(UTILS) $(VERTEX) $(TARGET)
+	$(CC) $(CFLAGS) $(VENDOR_INCLUDES) $(BINS) $(MAIN) $(UTILS) $(VERTEX) $(LOG) $(TARGET)
 
 glfw: $(GLFW)
 	cmake -S vendor/glfw-3.3.8 -B build/glfw && cmake --build build/glfw

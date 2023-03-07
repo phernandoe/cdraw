@@ -19,6 +19,7 @@ Requirements:
 - [ ] `vertex` folder doesn't make sense
 - [ ] better namespacing for vao and vbo functions
 - [ ] optional memory profiler
+- [ ] it sucks that the `vendor` folder is so heavy. make it not suck?
 
 #### Features
 - [ ] error handler
@@ -34,3 +35,6 @@ Requirements:
 - [ ] fill color
 - [ ] stroke coor
 
+#### References
+- https://docs.gl
+- IO -> https://www.glfw.org/docs/latest/group__input.html

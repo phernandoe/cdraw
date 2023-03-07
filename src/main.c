@@ -1,10 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 #include <GL/glew.h>    // include GLEW
 #include <GLFW/glfw3.h> // GLFW helper library
 #include "util/getFileContents.h"
 #include "vertex/vao.h"
+#include "log/log.h"
+
+void glfw_error_callback(int error, const char* description) {
+  gl_log_err("GLFW ERROR: code %i msg: %s\n", error, description);
+}
 
 /*
  * 3-dimensional points are defined in the X, Y, Z pattern.
@@ -43,6 +49,12 @@ float *createPoints()
 
 GLFWAPI GLFWwindow *startGlfwAndCreateWindow(int x, int y)
 {
+  assert(restart_gl_log());
+  // start GL context and O/S window using the GLFW helper library
+  gl_log("starting GLFW\n%s\n", glfwGetVersionString());
+  // register the error call-back function that we wrote, above
+  glfwSetErrorCallback(glfw_error_callback);
+
   if (!glfwInit())
   {
     fprintf(stderr, "ERROR: could not start GLFW3\n");
@@ -53,7 +65,9 @@ GLFWAPI GLFWwindow *startGlfwAndCreateWindow(int x, int y)
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  glfwWindowHint(GLFW_SAMPLES, 4); // anti-aliasing
 
+  GLFWmonitor* mon = glfwGetPrimaryMonitor();
   GLFWwindow *window = glfwCreateWindow(x, y, "Hello Triangle", NULL, NULL);
   if (!window)
   {
@@ -66,6 +80,7 @@ GLFWAPI GLFWwindow *startGlfwAndCreateWindow(int x, int y)
   // start GLEW extension handler
   glewExperimental = GL_TRUE;
   glewInit();
+  log_gl_params();
 
   const GLubyte *renderer = glGetString(GL_RENDERER);
   const GLubyte *version = glGetString(GL_VERSION);
@@ -73,6 +88,24 @@ GLFWAPI GLFWwindow *startGlfwAndCreateWindow(int x, int y)
   printf("OpenGL version supported %s\n", version);
 
   return window;
+}
+
+void updateFpsCounter(GLFWwindow *window, double previous_seconds)
+{
+  static int frame_count;
+  double current_seconds = glfwGetTime();
+  double elapsed_seconds = current_seconds - previous_seconds;
+  printf("Seconds: %lf\n", elapsed_seconds);
+  if (elapsed_seconds > 0.25)
+  {
+    previous_seconds = current_seconds;
+    double fps = (double)frame_count / elapsed_seconds;
+    char tmp[128];
+    sprintf(tmp, "opengl @ fps: %.2f", fps);
+    glfwSetWindowTitle(window, tmp);
+    frame_count = 0;
+  }
+  frame_count++;
 }
 
 int main()
@@ -130,7 +163,7 @@ int main()
   glAttachShader(shader_programme_a, vs_a);
   glLinkProgram(shader_programme_a);
 
-  // shader b
+  /* _____________________________Create shader B_______________________________________ */
 
   const char *fragment_shader_b = getFileContents("src/shaders/fragment_shader_b.glsl");
   if (fragment_shader_b == NULL)
@@ -150,8 +183,12 @@ int main()
   glAttachShader(shader_programme_b, vs_b);
   glLinkProgram(shader_programme_b);
 
+  double glfwStartTime = glfwGetTime();
+
+  // TODO: separate rendering loop into its own function
   while (!glfwWindowShouldClose(window))
   {
+    updateFpsCounter(window, glfwStartTime);
     // wipe the drawing surface clear
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -168,6 +205,11 @@ int main()
     glfwPollEvents();
     // put the stuff we've been drawing onto the display
     glfwSwapBuffers(window);
+
+    if (GLFW_PRESS == glfwGetKey(window, GLFW_KEY_ESCAPE))
+    {
+      glfwSetWindowShouldClose(window, 1);
+    }
   }
 
   // close GL context and any other GLFW resources
