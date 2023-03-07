@@ -95,7 +95,6 @@ void updateFpsCounter(GLFWwindow *window, double previous_seconds)
   static int frame_count;
   double current_seconds = glfwGetTime();
   double elapsed_seconds = current_seconds - previous_seconds;
-  printf("Seconds: %lf\n", elapsed_seconds);
   if (elapsed_seconds > 0.25)
   {
     previous_seconds = current_seconds;
@@ -106,6 +105,18 @@ void updateFpsCounter(GLFWwindow *window, double previous_seconds)
     frame_count = 0;
   }
   frame_count++;
+}
+
+bool is_valid(GLuint programme) {
+  glValidateProgram(programme);
+  int params = -1;
+  glGetProgramiv(programme, GL_VALIDATE_STATUS, &params);
+  printf("program %i GL_VALIDATE_STATUS = %i\n", programme, params);
+  if (GL_TRUE != params) {
+    print_programme_info_log(programme);
+    return false;
+  }
+  return true;
 }
 
 int main()
@@ -151,17 +162,28 @@ int main()
     return 1;
   }
 
+  /* _____________________________Create shader A_______________________________________ */
+
   GLuint vs_a = glCreateShader(GL_VERTEX_SHADER); // glCreateShader returns an ID
   glShaderSource(vs_a, 1, &vertex_shader, NULL);
   glCompileShader(vs_a);
   GLuint fs_a = glCreateShader(GL_FRAGMENT_SHADER);
   glShaderSource(fs_a, 1, &fragment_shader, NULL);
   glCompileShader(fs_a);
+  if (checkShaderForErrors(fs_a)) {
+    return 1;
+  };
 
   GLuint shader_programme_a = glCreateProgram();
   glAttachShader(shader_programme_a, fs_a);
   glAttachShader(shader_programme_a, vs_a);
   glLinkProgram(shader_programme_a);
+
+  if (checkForLinkingErrors(shader_programme_a)) {
+    return 1;
+  };
+
+  GLint customColor = glGetUniformLocation(shader_programme_a, "inputColour");
 
   /* _____________________________Create shader B_______________________________________ */
 
@@ -183,8 +205,8 @@ int main()
   glAttachShader(shader_programme_b, vs_b);
   glLinkProgram(shader_programme_b);
 
+  /* _____________________________Drawing loop_______________________________________ */
   double glfwStartTime = glfwGetTime();
-
   // TODO: separate rendering loop into its own function
   while (!glfwWindowShouldClose(window))
   {
@@ -193,6 +215,7 @@ int main()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glUseProgram(shader_programme_a);
+    glUniform4f(customColor, 1.0f, 0.0f, 1.0f, 1.0f);
     bindVAO(vao_a);
     // draw points 0-3 from the currently bound VAO with current in-use shader
     glDrawArrays(GL_TRIANGLES, 0, 3);
