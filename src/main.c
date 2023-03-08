@@ -107,15 +107,15 @@ void updateFpsCounter(GLFWwindow *window, double previous_seconds)
   frame_count++;
 }
 
-bool is_valid(GLuint programme)
+bool is_valid(GLuint programId)
 {
-  glValidateProgram(programme);
+  glValidateProgram(programId);
   int params = -1;
-  glGetProgramiv(programme, GL_VALIDATE_STATUS, &params);
-  printf("program %i GL_VALIDATE_STATUS = %i\n", programme, params);
+  glGetProgramiv(programId, GL_VALIDATE_STATUS, &params);
+  printf("program %i GL_VALIDATE_STATUS = %i\n", programId, params);
   if (GL_TRUE != params)
   {
-    print_programme_info_log(programme);
+    print_program_info_log(programId);
     return false;
   }
   return true;

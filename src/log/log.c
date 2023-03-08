@@ -125,12 +125,12 @@ int checkShaderForErrors(GLuint shaderId)
   return 0;
 }
 
-void print_programme_info_log(GLuint programme) {
+void print_program_info_log(GLuint programId) {
   int max_length = 2048;
   int actual_length = 0;
   char program_log[2048];
-  glGetProgramInfoLog(programme, max_length, &actual_length, program_log);
-  printf("program info log for GL index %u:\n%s", programme, program_log);
+  glGetProgramInfoLog(programId, max_length, &actual_length, program_log);
+  printf("program info log for GL index %u:\n%s", programId, program_log);
 }
 
 int checkForLinkingErrors(GLuint shaderProgramId)
@@ -143,7 +143,7 @@ int checkForLinkingErrors(GLuint shaderProgramId)
     fprintf(stderr,
             "ERROR: could not link shader programme GL index %u\n",
             shaderProgramId);
-    print_programme_info_log(shaderProgramId);
+    print_program_info_log(shaderProgramId);
     return 1;
   }
   return 0;
@@ -169,16 +169,16 @@ const char* GL_type_to_string(GLenum type) {
   return "other";
 }
 
-void print_all(GLuint programme) {
-  printf("--------------------\nshader programme %i info:\n", programme);
+void print_all(GLuint programId) {
+  printf("--------------------\nshader programme %i info:\n", programId);
   int params = -1;
-  glGetProgramiv(programme, GL_LINK_STATUS, &params);
+  glGetProgramiv(programId, GL_LINK_STATUS, &params);
   printf("GL_LINK_STATUS = %i\n", params);
   
-  glGetProgramiv(programme, GL_ATTACHED_SHADERS, &params);
+  glGetProgramiv(programId, GL_ATTACHED_SHADERS, &params);
   printf("GL_ATTACHED_SHADERS = %i\n", params);
   
-  glGetProgramiv(programme, GL_ACTIVE_ATTRIBUTES, &params);
+  glGetProgramiv(programId, GL_ACTIVE_ATTRIBUTES, &params);
   printf("GL_ACTIVE_ATTRIBUTES = %i\n", params);
   for (int i = 0; i < params; i++) {
     char name[64];
@@ -187,7 +187,7 @@ void print_all(GLuint programme) {
     int size = 0;
     GLenum type;
     glGetActiveAttrib (
-      programme,
+      programId,
       i,
       max_length,
       &actual_length,
@@ -199,18 +199,18 @@ void print_all(GLuint programme) {
       for(int j = 0; j < size; j++) {
         char long_name[64];
         sprintf(long_name, "%s[%i]", name, j);
-        int location = glGetAttribLocation(programme, long_name);
+        int location = glGetAttribLocation(programId, long_name);
         printf("  %i) type:%s name:%s location:%i\n",
           i, GL_type_to_string(type), long_name, location);
       }
     } else {
-      int location = glGetAttribLocation(programme, name);
+      int location = glGetAttribLocation(programId, name);
       printf("  %i) type:%s name:%s location:%i\n",
         i, GL_type_to_string(type), name, location);
     }
   }
   
-  glGetProgramiv(programme, GL_ACTIVE_UNIFORMS, &params);
+  glGetProgramiv(programId, GL_ACTIVE_UNIFORMS, &params);
   printf("GL_ACTIVE_UNIFORMS = %i\n", params);
   for(int i = 0; i < params; i++) {
     char name[64];
@@ -219,7 +219,7 @@ void print_all(GLuint programme) {
     int size = 0;
     GLenum type;
     glGetActiveUniform(
-      programme,
+      programId,
       i,
       max_length,
       &actual_length,
@@ -231,16 +231,16 @@ void print_all(GLuint programme) {
       for(int j = 0; j < size; j++) {
         char long_name[64];
         sprintf(long_name, "%s[%i]", name, j);
-        int location = glGetUniformLocation(programme, long_name);
+        int location = glGetUniformLocation(programId, long_name);
         printf("  %i) type:%s name:%s location:%i\n",
           i, GL_type_to_string(type), long_name, location);
       }
     } else {
-      int location = glGetUniformLocation(programme, name);
+      int location = glGetUniformLocation(programId, name);
       printf("  %i) type:%s name:%s location:%i\n",
         i, GL_type_to_string(type), name, location);
     }
   }
   
-  print_programme_info_log(programme);
+  print_program_info_log(programId);
 }
