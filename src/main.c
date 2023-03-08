@@ -2,9 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
-#include <GL/glew.h>    // include GLEW
+#include <GL/glew.h>
 #include <GLFW/glfw3.h> // GLFW helper library
 #include "util/getFileContents.h"
+#include "util/shader.h"
 #include "vertex/vao.h"
 #include "log/log.h"
 
@@ -190,24 +191,9 @@ int main()
   GLint customColor = glGetUniformLocation(shader_programme_a, "inputColour");
 
   /* _____________________________Create shader B_______________________________________ */
-
-  const char *fragment_shader_b = getFileContents("src/shaders/fragment_shader_b.glsl");
-  if (fragment_shader_b == NULL)
-  {
-    return 1;
-  }
-
-  GLuint vs_b = glCreateShader(GL_VERTEX_SHADER); // glCreateShader returns an ID
-  glShaderSource(vs_b, 1, &vertex_shader, NULL);
-  glCompileShader(vs_b);
-  GLuint fs_b = glCreateShader(GL_FRAGMENT_SHADER);
-  glShaderSource(fs_b, 1, &fragment_shader_b, NULL);
-  glCompileShader(fs_b);
-
-  GLuint shader_programme_b = glCreateProgram();
-  glAttachShader(shader_programme_b, fs_b);
-  glAttachShader(shader_programme_b, vs_b);
-  glLinkProgram(shader_programme_b);
+  GLuint fs_b = createFragmentShader("src/shaders/fragment_shader_b.glsl");
+  GLuint vs_b = createVertexShader("src/shaders/vertex_shader.glsl");
+  GLuint shader_programme_b = createShaderProgram(vs_b ,fs_b);
 
   /* _____________________________Drawing loop_______________________________________ */
   double glfwStartTime = glfwGetTime();
