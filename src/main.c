@@ -8,7 +8,8 @@
 #include "vertex/vao.h"
 #include "log/log.h"
 
-void glfw_error_callback(int error, const char* description) {
+void glfw_error_callback(int error, const char *description)
+{
   gl_log_err("GLFW ERROR: code %i msg: %s\n", error, description);
 }
 
@@ -23,27 +24,26 @@ void glfw_error_callback(int error, const char* description) {
  */
 float *createPoints()
 {
-    // TODO: clean this function up, maybe create a utility for appending to array?
+  // TODO: clean this function up, maybe create a utility for appending to array?
   static float sideA[] = {
       -0.5f, -0.5f, 0.0f,
       -0.5f, 0.5f, 0.0f,
       -0.25f, -0.5f, 0.0f,
       -0.25f, 0.5f, 0.0f,
       -0.5f, 0.5f, 0.0f,
-      -0.25f, -0.5f, 0.0f
-  };
+      -0.25f, -0.5f, 0.0f};
 
-//  static float sideB[] = {
-//      -0.25f, 0.5f, 0.0f,
-//      -0.5f, 0.5f, 0.0f,
-//      -0.25f, -0.5f, 0.0f};
+  //  static float sideB[] = {
+  //      -0.25f, 0.5f, 0.0f,
+  //      -0.5f, 0.5f, 0.0f,
+  //      -0.25f, -0.5f, 0.0f};
 
-//  memcpy(sideA, sideB, 9 * sizeof(float)); // floats are 4 bytes
-//  int i;
-//  for (i = 0; i < 18; i++) {
-//    char coordinate[] = {'X', 'Y', 'Z'};
-//    printf("(%d)%c: %f\n", i, coordinate[i % 3], sideA[i]);
-//  }
+  //  memcpy(sideA, sideB, 9 * sizeof(float)); // floats are 4 bytes
+  //  int i;
+  //  for (i = 0; i < 18; i++) {
+  //    char coordinate[] = {'X', 'Y', 'Z'};
+  //    printf("(%d)%c: %f\n", i, coordinate[i % 3], sideA[i]);
+  //  }
   return sideA;
 }
 
@@ -67,7 +67,7 @@ GLFWAPI GLFWwindow *startGlfwAndCreateWindow(int x, int y)
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   glfwWindowHint(GLFW_SAMPLES, 4); // anti-aliasing
 
-  GLFWmonitor* mon = glfwGetPrimaryMonitor();
+  GLFWmonitor *mon = glfwGetPrimaryMonitor();
   GLFWwindow *window = glfwCreateWindow(x, y, "Hello Triangle", NULL, NULL);
   if (!window)
   {
@@ -107,12 +107,14 @@ void updateFpsCounter(GLFWwindow *window, double previous_seconds)
   frame_count++;
 }
 
-bool is_valid(GLuint programme) {
+bool is_valid(GLuint programme)
+{
   glValidateProgram(programme);
   int params = -1;
   glGetProgramiv(programme, GL_VALIDATE_STATUS, &params);
   printf("program %i GL_VALIDATE_STATUS = %i\n", programme, params);
-  if (GL_TRUE != params) {
+  if (GL_TRUE != params)
+  {
     print_programme_info_log(programme);
     return false;
   }
@@ -170,7 +172,8 @@ int main()
   GLuint fs_a = glCreateShader(GL_FRAGMENT_SHADER);
   glShaderSource(fs_a, 1, &fragment_shader, NULL);
   glCompileShader(fs_a);
-  if (checkShaderForErrors(fs_a)) {
+  if (checkShaderForErrors(fs_a))
+  {
     return 1;
   };
 
@@ -179,7 +182,8 @@ int main()
   glAttachShader(shader_programme_a, vs_a);
   glLinkProgram(shader_programme_a);
 
-  if (checkForLinkingErrors(shader_programme_a)) {
+  if (checkForLinkingErrors(shader_programme_a))
+  {
     return 1;
   };
 
