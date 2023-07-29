@@ -167,7 +167,7 @@ int main()
 
   /* _____________________________Create shader A_______________________________________ */
 
-  GLuint vs_a = glCreateShader(GL_VERTEX_SHADER); // glCreateShader returns an ID
+  GLuint vs_a = glCreateShader(GL_VERTEX_SHADER);
   glShaderSource(vs_a, 1, &vertex_shader, NULL);
   glCompileShader(vs_a);
   GLuint fs_a = glCreateShader(GL_FRAGMENT_SHADER);

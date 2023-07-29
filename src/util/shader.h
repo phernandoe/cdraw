@@ -5,6 +5,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "getFileContents.h"
+#include "../log/log.h"
 
 GLuint createVertexShader(char *filePath);
 GLuint createFragmentShader(char *filePath);
