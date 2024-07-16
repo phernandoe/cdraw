@@ -25,8 +25,9 @@ build-src: $(MAIN)
 
 glfw: $(GLFW)
 	cmake -S vendor/glfw-3.3.8 -B build/glfw && cmake --build build/glfw
+
 glew: $(GLEW)
-	cd $(GLEW)/auto && make && cd ./.. && make all && make install GLEW_DEST=./../../build/glew
+	cd $(GLEW)/auto && make && cd ./.. && make all SYSTEM=darwin && make install GLEW_DEST=./../../build/glew
 
 clean: 
 	rm -dr *.o *.out *.dSYM build/glfw/* build/glew/*
