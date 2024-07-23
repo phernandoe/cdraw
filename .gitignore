@@ -2,6 +2,7 @@ build/glew/*
 build/glfw/*
 gl.log
 .vscode
+compile_commands.json
 
 # Prerequisites
 *.d

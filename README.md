@@ -38,3 +38,5 @@ Requirements:
 #### References
 - https://docs.gl
 - IO -> https://www.glfw.org/docs/latest/group__input.html
+- https://github.com/erkkah/tigr for API inspiration
+- https://www.raylib.com/cheatsheet/cheatsheet.html for API inspiration

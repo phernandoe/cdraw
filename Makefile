@@ -24,7 +24,7 @@ build-src: $(MAIN)
 	$(CC) $(CFLAGS) $(VENDOR_INCLUDES) $(BINS) $(MAIN) $(UTILS) $(VERTEX) $(LOG) $(TARGET)
 
 glfw: $(GLFW)
-	cmake -S vendor/glfw-3.3.8 -B build/glfw && cmake --build build/glfw
+	cmake -S $(GLFW) -B build/glfw && cmake --build build/glfw
 
 glew: $(GLEW)
 	cd $(GLEW)/auto && make && cd ./.. && make all SYSTEM=darwin && make install GLEW_DEST=./../../build/glew
