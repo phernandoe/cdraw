@@ -3,6 +3,7 @@ build/glfw/*
 gl.log
 .vscode
 compile_commands.json
+.cache
 
 # Prerequisites
 *.d
