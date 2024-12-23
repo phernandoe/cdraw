@@ -26,6 +26,7 @@ GLuint createFragmentShader(char *filePath)
   glCompileShader(fs);
   return fs;
 }
+
 GLuint createShaderProgram(GLuint vertexShader, GLuint fragmentShader)
 {
   GLuint p = glCreateProgram();
@@ -35,4 +36,11 @@ GLuint createShaderProgram(GLuint vertexShader, GLuint fragmentShader)
   glDeleteShader(vertexShader);
   glDeleteShader(fragmentShader);
   return p;
+}
+
+GLuint compileShaderFromPath(char *vertexShaderFilePath, char *fragmentShaderFilePath)
+{
+  GLuint vs = createVertexShader(vertexShaderFilePath);
+  GLuint fs = createFragmentShader(fragmentShaderFilePath);
+  return createShaderProgram(vs, fs);
 }

@@ -94,38 +94,36 @@ bool is_valid(GLuint programId)
 int main()
 {
   GLFWwindow *window = startGlfwAndCreateWindow(WINDOW_X, WINDOW_Y);
-  if (!window)
-  {
-    return 1;
-  }
+  if (!window) return 1;
+
   // tell GL to only draw onto a pixel if the shape is closer to the viewer
   glEnable(GL_DEPTH_TEST); // enable depth-testing
   glDepthFunc(GL_LESS);    // depth-testing interprets a smaller value as "closer"
 
   /* _____________________________Define triangle vertices_____________________________ */
+
+  float squareSize = 0.25f;
+
   float vertices[] = {
       // positions         // colors
-      0.5f,  0.5f,  0.0f, 1.0f, 0.5f, 0.0f,
-      0.5f,  -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-      -0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 1.0f,
-      -0.5f, 0.5f,  0.0f, 1.0f, 1.0f, 0.0f
+      squareSize,  squareSize,  0.0f, 1.0f, 0.5f, 0.0f,
+      squareSize,  -squareSize, 0.0f, 0.0f, 1.0f, 0.0f,
+      -squareSize, -squareSize, 0.0f, 0.0f, 0.5f, 1.0f,
+      -squareSize, squareSize,  0.0f, 1.0f, 1.0f, 0.0f
 };
   GLuint indices[] = {
-      // note that we start from 0!
       0, 1, 3, // first triangle
       1, 2, 3  // second triangle
   };
 
-  /* _____________________________Create vertex array object___________________________ */
   struct VAO vao = createVAO();
 
-  /* _____________________________Create vertex buffer object__________________________ */
+  /* _____________________________Create buffers ______________________________________ */
   GLuint vbo = 0;
   glGenBuffers(1, &vbo);
   bindVBO(vbo);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-  /* _____________________________Create element buffer object_________________________ */
   GLuint ebo = 0;
   glGenBuffers(1, &ebo);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
@@ -136,17 +134,14 @@ int main()
   setVertexAttributes(1, 3, 6 * sizeof(float), (void*)(3 * sizeof(float)));
   glEnableVertexAttribArray(1);
 
-  /* _____________________________Create shader A_______________________________________ */
+  /* _____________________________Create buffers (end) ________________________________ */
 
-  GLuint fs_a = createFragmentShader("src/shaders/fragment_shader_b.glsl");
-  GLuint vs_a = createVertexShader("src/shaders/vertex_shader_b.glsl");
-  GLuint shader_programme_a = createShaderProgram(vs_a ,fs_a);
-  glUseProgram(shader_programme_a);
-
-  if (checkForLinkingErrors(shader_programme_a))
-  {
-    return 1;
-  };
+  GLuint shader = compileShaderFromPath(
+      "src/shaders/vertex_shader_b.glsl",
+      "src/shaders/fragment_shader_b.glsl"
+  );
+  glUseProgram(shader);
+  if (checkForLinkingErrors(shader)) return 1;
 
   /* _____________________________Drawing loop_______________________________________ */
   double glfwStartTime = glfwGetTime();
@@ -160,7 +155,7 @@ int main()
     glBindVertexArray(0);
 
     glfwPollEvents();
-    glfwSwapBuffers(window);// put the stuff we've been drawing onto the display
+    glfwSwapBuffers(window);
 
     if (GLFW_PRESS == glfwGetKey(window, GLFW_KEY_ESCAPE))
     {

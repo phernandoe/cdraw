@@ -10,3 +10,4 @@
 GLuint createVertexShader(char *filePath);
 GLuint createFragmentShader(char *filePath);
 GLuint createShaderProgram(GLuint vertexShader, GLuint fragmentShader);
+GLuint compileShaderFromPath(char *vertexShaderFilePath, char *fragmentShaderFilePath);
