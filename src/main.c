@@ -9,43 +9,12 @@
 #include "vertex/vao.h"
 #include "log/log.h"
 
+#define WINDOW_X 640
+#define WINDOW_Y 480
+
 void glfw_error_callback(int error, const char *description)
 {
   gl_log_err("GLFW ERROR: code %i msg: %s\n", error, description);
-}
-
-/*
- * 3-dimensional points are defined in the X, Y, Z pattern.
- * 2-dimensional points are defined in the X, Y pattern.
- *
- *       0.0f, 0.5f, 0.0f   ->  /\
- *                             /  \
- *                            /    \
- *  -0.5f,  -0.5f, 0.0f  ->  /______\  <-  0.5f, -0.5f, 0.0f
- */
-float *createPoints()
-{
-  // TODO: clean this function up, maybe create a utility for appending to array?
-  static float sideA[] = {
-      -0.5f, -0.5f, 0.0f,
-      -0.5f, 0.5f, 0.0f,
-      -0.25f, -0.5f, 0.0f,
-      -0.25f, 0.5f, 0.0f,
-      -0.5f, 0.5f, 0.0f,
-      -0.25f, -0.5f, 0.0f};
-
-  //  static float sideB[] = {
-  //      -0.25f, 0.5f, 0.0f,
-  //      -0.5f, 0.5f, 0.0f,
-  //      -0.25f, -0.5f, 0.0f};
-
-  //  memcpy(sideA, sideB, 9 * sizeof(float)); // floats are 4 bytes
-  //  int i;
-  //  for (i = 0; i < 18; i++) {
-  //    char coordinate[] = {'X', 'Y', 'Z'};
-  //    printf("(%d)%c: %f\n", i, coordinate[i % 3], sideA[i]);
-  //  }
-  return sideA;
 }
 
 GLFWAPI GLFWwindow *startGlfwAndCreateWindow(int x, int y)
@@ -122,102 +91,89 @@ bool is_valid(GLuint programId)
   return true;
 }
 
+/*
+ * 3-dimensional points are defined in the X, Y, Z pattern.
+ * 2-dimensional points are defined in the X, Y pattern.
+ */
+float *createPoints()
+{
+  static float sideA[] = {
+      -1.0f, 1.0f, 0.0f,
+      -1.0f, -1.0f, 0.0f,
+      1.0f, 1.0f, 0.0f,
+      -1.0f, -1.0f, 0.0f,
+      1.0f, 1.0f, 0.0f,
+      1.0f, -1.0f, 0.0f};
+  return sideA;
+}
+
 int main()
 {
-  GLFWwindow *window = startGlfwAndCreateWindow(640, 480);
+  GLFWwindow *window = startGlfwAndCreateWindow(WINDOW_X, WINDOW_Y);
   if (!window)
   {
     return 1;
   }
-
   // tell GL to only draw onto a pixel if the shape is closer to the viewer
   glEnable(GL_DEPTH_TEST); // enable depth-testing
   glDepthFunc(GL_LESS);    // depth-testing interprets a smaller value as "closer"
 
   /* _____________________________Define triangle vertices_____________________________ */
-  float *points = createPoints();
+  float vertices[] = {
+      0.5f,  0.5f,  0.0f, // top right
+      0.5f,  -0.5f, 0.0f, // bottom right
+      -0.5f, -0.5f, 0.0f, // bottom left
+      -0.5f, 0.5f,  0.0f  // top left
+  };
+  GLuint indices[] = {
+      // note that we start from 0!
+      0, 1, 3, // first triangle
+      1, 2, 3  // second triangle
+  };
+
+  /* _____________________________Create vertex array object___________________________ */
+  struct VAO vao = createVAO();
 
   /* _____________________________Create vertex buffer object__________________________ */
   GLuint vbo = 0;
   glGenBuffers(1, &vbo);
-  glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glBufferData(GL_ARRAY_BUFFER, 9 * 2 * sizeof(float), points, GL_STATIC_DRAW);
-
-  /* _____________________________Create vertex array object___________________________ */
-  struct VAO vao_a = createVAO();
   bindVBO(vbo);
-  setVertexAttributes(0, 3, 0);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-  struct VAO vao_b = createVAO();
-  bindVBO(vbo);
-  setVertexAttributes(0, 3, 0);
+  /* _____________________________Create element buffer object_________________________ */
+  GLuint ebo = 0;
+  glGenBuffers(1, &ebo);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-  /* _____________________________Create shaders_______________________________________ */
-  const char *vertex_shader = getFileContents("src/shaders/vertex_shader.glsl");
-  if (vertex_shader == NULL)
-  {
-    return 1;
-  }
-
-  const char *fragment_shader = getFileContents("src/shaders/fragment_shader.glsl");
-  if (fragment_shader == NULL)
-  {
-    return 1;
-  }
+  setVertexAttributes(0, 3, 3 * sizeof(float));
+  glEnableVertexAttribArray(0);
 
   /* _____________________________Create shader A_______________________________________ */
 
-  GLuint vs_a = glCreateShader(GL_VERTEX_SHADER);
-  glShaderSource(vs_a, 1, &vertex_shader, NULL);
-  glCompileShader(vs_a);
-  GLuint fs_a = glCreateShader(GL_FRAGMENT_SHADER);
-  glShaderSource(fs_a, 1, &fragment_shader, NULL);
-  glCompileShader(fs_a);
-  if (checkShaderForErrors(fs_a))
-  {
-    return 1;
-  };
-
-  GLuint shader_programme_a = glCreateProgram();
-  glAttachShader(shader_programme_a, fs_a);
-  glAttachShader(shader_programme_a, vs_a);
-  glLinkProgram(shader_programme_a);
+  GLuint fs_a = createFragmentShader("src/shaders/fragment_shader_b.glsl");
+  GLuint vs_a = createVertexShader("src/shaders/vertex_shader_b.glsl");
+  GLuint shader_programme_a = createShaderProgram(vs_a ,fs_a);
 
   if (checkForLinkingErrors(shader_programme_a))
   {
     return 1;
   };
 
-  GLint customColor = glGetUniformLocation(shader_programme_a, "inputColour");
-
-  /* _____________________________Create shader B_______________________________________ */
-  GLuint fs_b = createFragmentShader("src/shaders/fragment_shader_b.glsl");
-  GLuint vs_b = createVertexShader("src/shaders/vertex_shader.glsl");
-  GLuint shader_programme_b = createShaderProgram(vs_b ,fs_b);
-
   /* _____________________________Drawing loop_______________________________________ */
   double glfwStartTime = glfwGetTime();
-  // TODO: separate rendering loop into its own function
   while (!glfwWindowShouldClose(window))
   {
     updateFpsCounter(window, glfwStartTime);
-    // wipe the drawing surface clear
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glUseProgram(shader_programme_a);
-    glUniform4f(customColor, 1.0f, 0.0f, 1.0f, 1.0f);
-    bindVAO(vao_a);
-    // draw points 0-3 from the currently bound VAO with current in-use shader
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    bindVAO(vao);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
 
-    glUseProgram(shader_programme_b);
-    bindVAO(vao_b);
-    glDrawArrays(GL_TRIANGLES, 3, 3);
-
-    // update other events like input handling
     glfwPollEvents();
-    // put the stuff we've been drawing onto the display
-    glfwSwapBuffers(window);
+    glfwSwapBuffers(window);// put the stuff we've been drawing onto the display
 
     if (GLFW_PRESS == glfwGetKey(window, GLFW_KEY_ESCAPE))
     {
@@ -225,9 +181,6 @@ int main()
     }
   }
 
-  // close GL context and any other GLFW resources
-  free((char *)vertex_shader);
-  free((char *)fragment_shader);
   glfwTerminate();
   return 0;
 }

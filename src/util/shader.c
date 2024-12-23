@@ -32,5 +32,7 @@ GLuint createShaderProgram(GLuint vertexShader, GLuint fragmentShader)
   glAttachShader(p, fragmentShader);
   glAttachShader(p, vertexShader);
   glLinkProgram(p);
+  glDeleteShader(vertexShader);
+  glDeleteShader(fragmentShader);
   return p;
 }

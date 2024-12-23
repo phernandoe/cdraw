@@ -8,7 +8,6 @@ struct VAO createVAO(){
   struct VAO self;
   glGenVertexArrays(1, &self.id);
   bindVAO(self);
-  glEnableVertexAttribArray(0);
   return self;
 };
 
@@ -17,7 +16,7 @@ void setVertexAttributes(
     GLint size,
     GLsizei stride)
 {
-  glVertexAttribPointer(index, size, GL_FLOAT, GL_FALSE, stride, NULL);
+  glVertexAttribPointer(index, size, GL_FLOAT, GL_FALSE, stride, (void*)0);
 };
 
 void bindVBO(GLuint VBO){
