@@ -10,7 +10,7 @@
 #include "log/log.h"
 
 #define WINDOW_X 640
-#define WINDOW_Y 480
+#define WINDOW_Y 640
 
 void glfw_error_callback(int error, const char *description)
 {
@@ -91,22 +91,6 @@ bool is_valid(GLuint programId)
   return true;
 }
 
-/*
- * 3-dimensional points are defined in the X, Y, Z pattern.
- * 2-dimensional points are defined in the X, Y pattern.
- */
-float *createPoints()
-{
-  static float sideA[] = {
-      -1.0f, 1.0f, 0.0f,
-      -1.0f, -1.0f, 0.0f,
-      1.0f, 1.0f, 0.0f,
-      -1.0f, -1.0f, 0.0f,
-      1.0f, 1.0f, 0.0f,
-      1.0f, -1.0f, 0.0f};
-  return sideA;
-}
-
 int main()
 {
   GLFWwindow *window = startGlfwAndCreateWindow(WINDOW_X, WINDOW_Y);
@@ -120,11 +104,12 @@ int main()
 
   /* _____________________________Define triangle vertices_____________________________ */
   float vertices[] = {
-      0.5f,  0.5f,  0.0f, // top right
-      0.5f,  -0.5f, 0.0f, // bottom right
-      -0.5f, -0.5f, 0.0f, // bottom left
-      -0.5f, 0.5f,  0.0f  // top left
-  };
+      // positions         // colors
+      0.5f,  0.5f,  0.0f, 1.0f, 0.5f, 0.0f,
+      0.5f,  -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+      -0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 1.0f,
+      -0.5f, 0.5f,  0.0f, 1.0f, 1.0f, 0.0f
+};
   GLuint indices[] = {
       // note that we start from 0!
       0, 1, 3, // first triangle
@@ -146,14 +131,17 @@ int main()
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-  setVertexAttributes(0, 3, 3 * sizeof(float));
+  setVertexAttributes(0, 3, 6 * sizeof(float), (void*)0);
   glEnableVertexAttribArray(0);
+  setVertexAttributes(1, 3, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+  glEnableVertexAttribArray(1);
 
   /* _____________________________Create shader A_______________________________________ */
 
   GLuint fs_a = createFragmentShader("src/shaders/fragment_shader_b.glsl");
   GLuint vs_a = createVertexShader("src/shaders/vertex_shader_b.glsl");
   GLuint shader_programme_a = createShaderProgram(vs_a ,fs_a);
+  glUseProgram(shader_programme_a);
 
   if (checkForLinkingErrors(shader_programme_a))
   {
@@ -167,7 +155,6 @@ int main()
     updateFpsCounter(window, glfwStartTime);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glUseProgram(shader_programme_a);
     bindVAO(vao);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);

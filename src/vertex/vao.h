@@ -14,7 +14,8 @@ struct VAO createVAO();
 void setVertexAttributes(
   GLuint index,
   GLint size,
-  GLsizei stride
+  GLsizei stride,
+  const GLvoid * offset
 );
 
 void bindVBO(GLuint VBO);

@@ -14,9 +14,10 @@ struct VAO createVAO(){
 void setVertexAttributes(
     GLuint index,
     GLint size,
-    GLsizei stride)
+    GLsizei stride,
+    const GLvoid * offset)
 {
-  glVertexAttribPointer(index, size, GL_FLOAT, GL_FALSE, stride, (void*)0);
+  glVertexAttribPointer(index, size, GL_FLOAT, GL_FALSE, stride, offset);
 };
 
 void bindVBO(GLuint VBO){
