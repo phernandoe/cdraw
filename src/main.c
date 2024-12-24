@@ -105,21 +105,33 @@ int main()
   float squareSize = 0.10f;
   int numberOfSquares = 2;
 
-  float vertices[] = {
+  GLfloat vertices[] = {
       // positions         // colors
       squareSize,  squareSize,  0.0f, 1.0f, 0.5f, 0.0f,
       squareSize,  -squareSize, 0.0f, 0.0f, 1.0f, 0.0f,
       -squareSize, -squareSize, 0.0f, 0.0f, 0.5f, 1.0f,
       -squareSize, squareSize,  0.0f, 1.0f, 1.0f, 0.0f
-};
+  };
   GLuint indices[] = {
       0, 1, 3, // first triangle
       1, 2, 3  // second triangle
   };
 
+  // Translations rows have to match the number of squares (numberOfSquares)
+  // TODO: Create this dynamically
+  GLfloat translations[] = {
+      -0.5f, 0.0f, 0.0f,
+      0.5f, 0.0f, 0.0f
+  };
+
   struct VAO vao = createVAO();
 
   /* _____________________________Create buffers ______________________________________ */
+  GLuint instanceVbo = 0;
+  glGenBuffers(1, &instanceVbo);
+  bindVBO(instanceVbo);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(translations), translations, GL_STATIC_DRAW);
+
   GLuint vbo = 0;
   glGenBuffers(1, &vbo);
   bindVBO(vbo);
@@ -135,6 +147,12 @@ int main()
   setVertexAttributes(1, 3, 6 * sizeof(float), (void*)(3 * sizeof(float)));
   glEnableVertexAttribArray(1);
 
+  glEnableVertexAttribArray(2);
+  bindVBO(instanceVbo);
+  setVertexAttributes(2, 3, 3 * sizeof(float), (void*)0);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glVertexAttribDivisor(2, 1);
+
   /* _____________________________Create buffers (end) ________________________________ */
 
   GLuint shader = compileShaderFromPath(
@@ -142,15 +160,6 @@ int main()
       "src/shaders/fragment_shader_b.glsl"
   );
   glUseProgram(shader);
-
-  char offsetIndex[128];
-  float gridGap = 0.3f;
-  for (unsigned int i = 0; i < numberOfSquares; i++) {
-    sprintf(offsetIndex, "offsets[%i]", i);
-    float xOffset = (squareSize * i * 2) - gridGap;
-    GLint o = glGetUniformLocation(shader, offsetIndex);
-    glUniform3f(o, xOffset, 0.0f, 0.0f);
-  }
 
   if (checkForLinkingErrors(shader)) return 1;
 
