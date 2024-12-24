@@ -101,9 +101,12 @@ int main()
   glDepthFunc(GL_LESS);    // depth-testing interprets a smaller value as "closer"
 
   /* _____________________________Define triangle vertices_____________________________ */
+  // TODO: Just say if you want a 5x5 grid, 10x10, etc
 
-  float squareSize = 0.10f;
-  int numberOfSquares = 2;
+  float squareSize = 0.2f;
+  float numberOfSquares = WINDOW_X * squareSize;
+  int squaresPerVertex = WINDOW_X / numberOfSquares;
+  int totalSquares = squaresPerVertex * squaresPerVertex;
 
   GLfloat vertices[] = {
       // positions         // colors
@@ -117,12 +120,34 @@ int main()
       1, 2, 3  // second triangle
   };
 
-  // Translations rows have to match the number of squares (numberOfSquares)
-  // TODO: Create this dynamically
-  GLfloat translations[] = {
-      -0.5f, 0.0f, 0.0f,
-      0.5f, 0.0f, 0.0f
-  };
+  GLfloat translations[(int)totalSquares * 3]; // 3 dimensions
+
+  int counter = 0;
+  int squareIndex = 0;
+  printf("numberOfSquares: %f\n", numberOfSquares);
+  printf("squaresPerVertex: %i\n", squaresPerVertex);
+
+  float xGap = -1.0f - squareSize;
+
+  for (int row = 0; row < squaresPerVertex; row++) {
+    xGap+= squareSize * 2;
+    float yGap = -1.0f - squareSize;
+    for (int column = 0; column < squaresPerVertex; column++) {
+
+        yGap+= squareSize * 2;
+
+        printf("Square index: %i\n", squareIndex);
+        printf("x: %f, y: %f\n", xGap, yGap);
+        printf("counter: %i\n\n", counter);
+
+        translations[squareIndex] = xGap;
+        translations[squareIndex + 1] = yGap;
+        translations[squareIndex + 2] = 0.0f;
+
+        squareIndex+=3;
+        counter++;
+    }
+  }
 
   struct VAO vao = createVAO();
 
@@ -156,8 +181,8 @@ int main()
   /* _____________________________Create buffers (end) ________________________________ */
 
   GLuint shader = compileShaderFromPath(
-      "src/shaders/vertex_shader_b.glsl",
-      "src/shaders/fragment_shader_b.glsl"
+      "src/shaders/grid.vert",
+      "src/shaders/default.frag"
   );
   glUseProgram(shader);
 

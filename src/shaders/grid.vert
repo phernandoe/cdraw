@@ -6,7 +6,7 @@ layout (location = 2) in vec3 offset_in;
 
 out vec3 customColor;
 
-uniform vec3 offsets[2];
+uniform vec3 offsets[1000]; // This needs to be at least the amount of squares in the grid
 
 void main() {
     gl_Position = vec4(vertex_position + offset_in, 1.0);
