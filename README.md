@@ -1,9 +1,8 @@
 # CDRAW
-The goal for this project is to create a C library where you can
-provide a list of points and color as input, get drawing as output.
+Generate a grid based on user input.
 
 ## Building the project
-Requirements: 
+Requirements:
 - `cmake` (on Mac, run `brew install cmake`)
 1. Run `make all`.
 2. Run `make run`.
@@ -15,25 +14,10 @@ Requirements:
 - Running `make run` will also build `src` and execute the resulting file.
 
 ### TODO
-#### Developer Experience
 - [ ] `vertex` folder doesn't make sense
 - [ ] better namespacing for vao and vbo functions
 - [ ] optional memory profiler
-- [ ] it sucks that the `vendor` folder is so heavy. make it not suck?
-
-#### Features
-- [ ] error handler
-
-- [ ] API to create shapes
-- [ ] line
-- [ ] square
-- [ ] triangle
-- [ ] circle
-- [ ] curved line
-
-- [ ] API to add color
-- [ ] fill color
-- [ ] stroke coor
+- [ ] condense the `vendor` folder
 
 #### References
 - https://docs.gl
