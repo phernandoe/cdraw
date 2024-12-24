@@ -1,3 +1,4 @@
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,9 +9,6 @@
 #include "util/shader.h"
 #include "vertex/vao.h"
 #include "log/log.h"
-
-#define WINDOW_X 640
-#define WINDOW_Y 640
 
 void glfw_error_callback(int error, const char *description)
 {
@@ -93,23 +91,24 @@ bool is_valid(GLuint programId)
 
 int main()
 {
-  GLFWwindow *window = startGlfwAndCreateWindow(WINDOW_X, WINDOW_Y);
+  int gridMultiplier = 7;
+  int squareSizeInPixels = 50;
+  int gridDimensions = gridMultiplier * gridMultiplier;
+  int squaresPerVertex = sqrt(gridDimensions);
+  int numberOfSquares = gridDimensions;
+  float squareSize = (float)squaresPerVertex / numberOfSquares;
+  int totalSquares = numberOfSquares;
+
+  int resolution = squareSizeInPixels * squaresPerVertex;
+  GLFWwindow *window = startGlfwAndCreateWindow(resolution, resolution);
   if (!window) return 1;
 
   // tell GL to only draw onto a pixel if the shape is closer to the viewer
   glEnable(GL_DEPTH_TEST); // enable depth-testing
   glDepthFunc(GL_LESS);    // depth-testing interprets a smaller value as "closer"
 
-  /* _____________________________Define triangle vertices_____________________________ */
-  // TODO: Just say if you want a 5x5 grid, 10x10, etc
-
-  float squareSize = 0.2f;
-  float numberOfSquares = WINDOW_X * squareSize;
-  int squaresPerVertex = WINDOW_X / numberOfSquares;
-  int totalSquares = squaresPerVertex * squaresPerVertex;
-
   GLfloat vertices[] = {
-      // positions         // colors
+      // positions                    // colors
       squareSize,  squareSize,  0.0f, 1.0f, 0.5f, 0.0f,
       squareSize,  -squareSize, 0.0f, 0.0f, 1.0f, 0.0f,
       -squareSize, -squareSize, 0.0f, 0.0f, 0.5f, 1.0f,
@@ -120,12 +119,13 @@ int main()
       1, 2, 3  // second triangle
   };
 
-  GLfloat translations[(int)totalSquares * 3]; // 3 dimensions
+  GLfloat translations[totalSquares * 3]; // 3 dimensions
 
   int counter = 0;
   int squareIndex = 0;
-  printf("numberOfSquares: %f\n", numberOfSquares);
+  printf("numberOfSquares: %i\n", numberOfSquares);
   printf("squaresPerVertex: %i\n", squaresPerVertex);
+  printf("squareSize: %f\n", squareSize);
 
   float xGap = -1.0f - squareSize;
 
@@ -136,9 +136,7 @@ int main()
 
         yGap+= squareSize * 2;
 
-        printf("Square index: %i\n", squareIndex);
-        printf("x: %f, y: %f\n", xGap, yGap);
-        printf("counter: %i\n\n", counter);
+        printf("#%i translation[%i] = x: %f, y:%f\n", counter, squareIndex, xGap, yGap);
 
         translations[squareIndex] = xGap;
         translations[squareIndex + 1] = yGap;
