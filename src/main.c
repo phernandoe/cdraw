@@ -102,7 +102,8 @@ int main()
 
   /* _____________________________Define triangle vertices_____________________________ */
 
-  float squareSize = 0.25f;
+  float squareSize = 0.10f;
+  int numberOfSquares = 2;
 
   float vertices[] = {
       // positions         // colors
@@ -141,6 +142,16 @@ int main()
       "src/shaders/fragment_shader_b.glsl"
   );
   glUseProgram(shader);
+
+  char offsetIndex[128];
+  float gridGap = 0.3f;
+  for (unsigned int i = 0; i < numberOfSquares; i++) {
+    sprintf(offsetIndex, "offsets[%i]", i);
+    float xOffset = (squareSize * i * 2) - gridGap;
+    GLint o = glGetUniformLocation(shader, offsetIndex);
+    glUniform3f(o, xOffset, 0.0f, 0.0f);
+  }
+
   if (checkForLinkingErrors(shader)) return 1;
 
   /* _____________________________Drawing loop_______________________________________ */
@@ -151,7 +162,7 @@ int main()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     bindVAO(vao);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, numberOfSquares);
     glBindVertexArray(0);
 
     glfwPollEvents();
