@@ -91,16 +91,17 @@ bool is_valid(GLuint programId)
 
 int main()
 {
-  int gridMultiplier = 7;
-  int squareSizeInPixels = 50;
-  int gridDimensions = gridMultiplier * gridMultiplier;
-  int squaresPerVertex = sqrt(gridDimensions);
-  int numberOfSquares = gridDimensions;
-  float squareSize = (float)squaresPerVertex / numberOfSquares;
-  int totalSquares = numberOfSquares;
+  int squareSizeInPixels = 100;
+  int xSquaresPerVertex = 8;
+  int ySquaresPerVertex = 11;
 
-  int resolution = squareSizeInPixels * squaresPerVertex;
-  GLFWwindow *window = startGlfwAndCreateWindow(resolution, resolution);
+  int w_x = squareSizeInPixels * xSquaresPerVertex;
+  int w_y = squareSizeInPixels * ySquaresPerVertex;
+  int numberOfSquares = xSquaresPerVertex * ySquaresPerVertex;
+  float squareSize_x = (float)squareSizeInPixels / ((float)w_x);
+  float squareSize_y = (float)squareSizeInPixels / ((float)w_y);
+
+  GLFWwindow *window = startGlfwAndCreateWindow(w_x, w_y);
   if (!window) return 1;
 
   // tell GL to only draw onto a pixel if the shape is closer to the viewer
@@ -109,32 +110,32 @@ int main()
 
   GLfloat vertices[] = {
       // positions                    // colors
-      squareSize,  squareSize,  0.0f, 1.0f, 0.5f, 0.0f,
-      squareSize,  -squareSize, 0.0f, 0.0f, 1.0f, 0.0f,
-      -squareSize, -squareSize, 0.0f, 0.0f, 0.5f, 1.0f,
-      -squareSize, squareSize,  0.0f, 1.0f, 1.0f, 0.0f
+      squareSize_x,  squareSize_y,  0.0f, 1.0f, 0.5f, 0.0f,
+      squareSize_x,  -squareSize_y, 0.0f, 0.0f, 1.0f, 0.0f,
+      -squareSize_x, -squareSize_y, 0.0f, 0.0f, 0.5f, 1.0f,
+      -squareSize_x, squareSize_y,  0.0f, 1.0f, 1.0f, 0.0f
   };
   GLuint indices[] = {
       0, 1, 3, // first triangle
       1, 2, 3  // second triangle
   };
 
-  GLfloat translations[totalSquares * 3]; // 3 dimensions
+  GLfloat translations[numberOfSquares * 3]; // 3 dimensions
 
   int counter = 0;
   int squareIndex = 0;
+  printf("window X: %i, window Y: %i\n", w_x, w_y);
   printf("numberOfSquares: %i\n", numberOfSquares);
-  printf("squaresPerVertex: %i\n", squaresPerVertex);
-  printf("squareSize: %f\n", squareSize);
 
-  float xGap = -1.0f - squareSize;
+  float xGap = -1.0f - squareSize_x;
 
-  for (int row = 0; row < squaresPerVertex; row++) {
-    xGap+= squareSize * 2;
-    float yGap = -1.0f - squareSize;
-    for (int column = 0; column < squaresPerVertex; column++) {
+  for (int row = 0; row < xSquaresPerVertex; row++) {
+    xGap+= squareSize_x * 2;
+    float yGap = -1.0f - squareSize_y;
 
-        yGap+= squareSize * 2;
+    for (int column = 0; column < ySquaresPerVertex; column++) {
+
+        yGap+= squareSize_y * 2;
 
         printf("#%i translation[%i] = x: %f, y:%f\n", counter, squareIndex, xGap, yGap);
 
