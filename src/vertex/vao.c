@@ -20,6 +20,3 @@ void setVertexAttributes(
   glVertexAttribPointer(index, size, GL_FLOAT, GL_FALSE, stride, offset);
 };
 
-void bindVBO(GLuint VBO){
-  glBindBuffer(GL_ARRAY_BUFFER, VBO);
-};

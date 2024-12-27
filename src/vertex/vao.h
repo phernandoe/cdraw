@@ -18,6 +18,4 @@ void setVertexAttributes(
   const GLvoid * offset
 );
 
-void bindVBO(GLuint VBO);
-
 #endif

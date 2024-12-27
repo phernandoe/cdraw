@@ -7,6 +7,8 @@
 #include "util/getFileContents.h"
 #include "util/shader.h"
 #include "vertex/vao.h"
+#include "vertex/vbo.h"
+#include "vertex/ebo.h"
 #include "log/log.h"
 
 void glfw_error_callback(int error, const char *description)
@@ -66,7 +68,7 @@ void updateFpsCounter(GLFWwindow *window, double previous_seconds)
   {
     previous_seconds = current_seconds;
     double fps = (double)frame_count / elapsed_seconds;
-    char tmp[128];
+    char tmp[64];
     sprintf(tmp, "opengl @ fps: %.2f", fps);
     glfwSetWindowTitle(window, tmp);
     frame_count = 0;
@@ -107,12 +109,14 @@ int main()
   glEnable(GL_DEPTH_TEST); // enable depth-testing
   glDepthFunc(GL_LESS);    // depth-testing interprets a smaller value as "closer"
 
+  /* _____________________________Create grid layout ______________________________________ */
+
   GLfloat vertices[] = {
       // positions                        // colors
-      squareSize_x,  squareSize_y,  0.0f, 1.0f, 0.5f, 0.0f,
+      squareSize_x,  squareSize_y,  0.0f, 1.0f, 0.0f, 0.0f,
       squareSize_x,  -squareSize_y, 0.0f, 0.0f, 1.0f, 0.0f,
-      -squareSize_x, -squareSize_y, 0.0f, 0.0f, 0.5f, 1.0f,
-      -squareSize_x, squareSize_y,  0.0f, 1.0f, 1.0f, 0.0f
+      -squareSize_x, -squareSize_y, 0.0f, 0.0f, 0.0f, 1.0f,
+      -squareSize_x, squareSize_y,  0.0f, 1.0f, 0.0f, 0.0f
   };
   GLuint indices[] = {
       0, 1, 3, // first triangle
@@ -147,36 +151,32 @@ int main()
     }
   }
 
+  /* _____________________________Create buffers & shaders _____________________________ */
   struct VAO vao = createVAO();
 
-  /* _____________________________Create buffers ______________________________________ */
-  GLuint instanceVbo = 0;
-  glGenBuffers(1, &instanceVbo);
-  bindVBO(instanceVbo);
+  struct VBO instanceVbo = createVBO();
   glBufferData(GL_ARRAY_BUFFER, sizeof(translations), translations, GL_STATIC_DRAW);
 
-  GLuint vbo = 0;
-  glGenBuffers(1, &vbo);
-  bindVBO(vbo);
+  struct VBO vbo = createVBO();
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-  GLuint ebo = 0;
-  glGenBuffers(1, &ebo);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+  struct EBO ebo = createEBO();
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
+  // Square positions
   setVertexAttributes(0, 3, 6 * sizeof(float), (void*)0);
   glEnableVertexAttribArray(0);
+
+  // Square colors
   setVertexAttributes(1, 3, 6 * sizeof(float), (void*)(3 * sizeof(float)));
   glEnableVertexAttribArray(1);
 
+  // Translations
   glEnableVertexAttribArray(2);
   bindVBO(instanceVbo);
   setVertexAttributes(2, 3, 3 * sizeof(float), (void*)0);
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glVertexAttribDivisor(2, 1);
-
-  /* _____________________________Create buffers (end) ________________________________ */
 
   GLuint shader = compileShaderFromPath(
       "src/shaders/grid.vert",
