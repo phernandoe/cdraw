@@ -3,6 +3,9 @@
 out vec4 fragColour;
 in vec3 customColor;
 
+uniform float time;
+
 void main() {
-    fragColour = vec4(customColor, 1.0);
+    vec3 c = 0.5 + 0.5 * cos(time + customColor);
+    fragColour = vec4(c, 1.0);
 }

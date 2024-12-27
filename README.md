@@ -15,8 +15,6 @@ Requirements:
 
 ### TODO
 - [ ] `vertex` folder doesn't make sense
-- [ ] better namespacing for vao and vbo functions
-- [ ] optional memory profiler
 - [ ] condense the `vendor` folder
 
 #### References

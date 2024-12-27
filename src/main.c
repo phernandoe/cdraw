@@ -1,4 +1,3 @@
-#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -91,9 +90,9 @@ bool is_valid(GLuint programId)
 
 int main()
 {
-  int squareSizeInPixels = 100;
-  int xSquaresPerVertex = 8;
-  int ySquaresPerVertex = 11;
+  int squareSizeInPixels = 10;
+  int xSquaresPerVertex = 64;
+  int ySquaresPerVertex = 64;
 
   int w_x = squareSizeInPixels * xSquaresPerVertex;
   int w_y = squareSizeInPixels * ySquaresPerVertex;
@@ -109,7 +108,7 @@ int main()
   glDepthFunc(GL_LESS);    // depth-testing interprets a smaller value as "closer"
 
   GLfloat vertices[] = {
-      // positions                    // colors
+      // positions                        // colors
       squareSize_x,  squareSize_y,  0.0f, 1.0f, 0.5f, 0.0f,
       squareSize_x,  -squareSize_y, 0.0f, 0.0f, 1.0f, 0.0f,
       -squareSize_x, -squareSize_y, 0.0f, 0.0f, 0.5f, 1.0f,
@@ -184,6 +183,7 @@ int main()
       "src/shaders/default.frag"
   );
   glUseProgram(shader);
+  int shaderTime =  glGetUniformLocation(shader, "time");
 
   if (checkForLinkingErrors(shader)) return 1;
 
@@ -195,6 +195,7 @@ int main()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     bindVAO(vao);
+    glUniform1f(shaderTime, glfwGetTime());
     glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, numberOfSquares);
     glBindVertexArray(0);
 
