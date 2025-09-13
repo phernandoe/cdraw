@@ -1,4 +1,5 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/msaa.dir/link.d"
   "CMakeFiles/msaa.dir/__/deps/getopt.c.o"
   "CMakeFiles/msaa.dir/__/deps/getopt.c.o.d"
   "CMakeFiles/msaa.dir/__/deps/glad_gl.c.o"

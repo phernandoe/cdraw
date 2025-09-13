@@ -1,4 +1,5 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/iconify.dir/link.d"
   "CMakeFiles/iconify.dir/__/deps/getopt.c.o"
   "CMakeFiles/iconify.dir/__/deps/getopt.c.o.d"
   "CMakeFiles/iconify.dir/__/deps/glad_gl.c.o"

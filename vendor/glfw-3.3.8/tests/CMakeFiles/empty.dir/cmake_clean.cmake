@@ -1,11 +1,12 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/empty.dir/link.d"
   "CMakeFiles/empty.dir/__/deps/glad_gl.c.o"
   "CMakeFiles/empty.dir/__/deps/glad_gl.c.o.d"
   "CMakeFiles/empty.dir/__/deps/tinycthread.c.o"
   "CMakeFiles/empty.dir/__/deps/tinycthread.c.o.d"
   "CMakeFiles/empty.dir/empty.c.o"
   "CMakeFiles/empty.dir/empty.c.o.d"
-  "empty.app/Contents/MacOS/empty"
+  "empty"
   "empty.pdb"
 )
 

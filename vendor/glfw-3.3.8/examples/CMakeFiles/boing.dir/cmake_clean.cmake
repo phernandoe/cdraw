@@ -1,10 +1,10 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/boing.dir/link.d"
   "CMakeFiles/boing.dir/__/deps/glad_gl.c.o"
   "CMakeFiles/boing.dir/__/deps/glad_gl.c.o.d"
   "CMakeFiles/boing.dir/boing.c.o"
   "CMakeFiles/boing.dir/boing.c.o.d"
-  "boing.app/Contents/MacOS/boing"
-  "boing.app/Contents/Resources/glfw.icns"
+  "boing"
   "boing.pdb"
 )
 

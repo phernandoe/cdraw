@@ -1,9 +1,10 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/title.dir/link.d"
   "CMakeFiles/title.dir/__/deps/glad_gl.c.o"
   "CMakeFiles/title.dir/__/deps/glad_gl.c.o.d"
   "CMakeFiles/title.dir/title.c.o"
   "CMakeFiles/title.dir/title.c.o.d"
-  "title.app/Contents/MacOS/title"
+  "title"
   "title.pdb"
 )
 

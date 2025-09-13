@@ -1,9 +1,10 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/gamma.dir/link.d"
   "CMakeFiles/gamma.dir/__/deps/glad_gl.c.o"
   "CMakeFiles/gamma.dir/__/deps/glad_gl.c.o.d"
   "CMakeFiles/gamma.dir/gamma.c.o"
   "CMakeFiles/gamma.dir/gamma.c.o.d"
-  "gamma.app/Contents/MacOS/gamma"
+  "gamma"
   "gamma.pdb"
 )
 

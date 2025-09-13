@@ -1,4 +1,5 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/glfwinfo.dir/link.d"
   "CMakeFiles/glfwinfo.dir/__/deps/getopt.c.o"
   "CMakeFiles/glfwinfo.dir/__/deps/getopt.c.o.d"
   "CMakeFiles/glfwinfo.dir/__/deps/glad_gl.c.o"

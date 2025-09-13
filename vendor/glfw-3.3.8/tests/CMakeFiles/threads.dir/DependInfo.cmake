@@ -8,14 +8,18 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/Users/fernando/dev/junkbox/cdraw/vendor/glfw-3.3.8/deps/glad_gl.c" "tests/CMakeFiles/threads.dir/__/deps/glad_gl.c.o" "gcc" "tests/CMakeFiles/threads.dir/__/deps/glad_gl.c.o.d"
-  "/Users/fernando/dev/junkbox/cdraw/vendor/glfw-3.3.8/deps/tinycthread.c" "tests/CMakeFiles/threads.dir/__/deps/tinycthread.c.o" "gcc" "tests/CMakeFiles/threads.dir/__/deps/tinycthread.c.o.d"
-  "/Users/fernando/dev/junkbox/cdraw/vendor/glfw-3.3.8/tests/threads.c" "tests/CMakeFiles/threads.dir/threads.c.o" "gcc" "tests/CMakeFiles/threads.dir/threads.c.o.d"
+  "/home/fernando/dev/cdraw/vendor/glfw-3.3.8/deps/glad_gl.c" "tests/CMakeFiles/threads.dir/__/deps/glad_gl.c.o" "gcc" "tests/CMakeFiles/threads.dir/__/deps/glad_gl.c.o.d"
+  "/home/fernando/dev/cdraw/vendor/glfw-3.3.8/deps/tinycthread.c" "tests/CMakeFiles/threads.dir/__/deps/tinycthread.c.o" "gcc" "tests/CMakeFiles/threads.dir/__/deps/tinycthread.c.o.d"
+  "/home/fernando/dev/cdraw/vendor/glfw-3.3.8/tests/threads.c" "tests/CMakeFiles/threads.dir/threads.c.o" "gcc" "tests/CMakeFiles/threads.dir/threads.c.o.d"
+  "" "tests/threads" "gcc" "tests/CMakeFiles/threads.dir/link.d"
   )
 
-# Targets to which this target links.
-set(CMAKE_TARGET_LINKED_INFO_FILES
-  "/Users/fernando/dev/junkbox/cdraw/vendor/glfw-3.3.8/src/CMakeFiles/glfw.dir/DependInfo.cmake"
+# Targets to which this target links which contain Fortran sources.
+set(CMAKE_Fortran_TARGET_LINKED_INFO_FILES
+  )
+
+# Targets to which this target links which contain Fortran sources.
+set(CMAKE_Fortran_TARGET_FORWARD_LINKED_INFO_FILES
   )
 
 # Fortran module output directory.

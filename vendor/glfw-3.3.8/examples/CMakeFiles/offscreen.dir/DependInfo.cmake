@@ -8,13 +8,17 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/Users/fernando/dev/junkbox/cdraw/vendor/glfw-3.3.8/deps/glad_gl.c" "examples/CMakeFiles/offscreen.dir/__/deps/glad_gl.c.o" "gcc" "examples/CMakeFiles/offscreen.dir/__/deps/glad_gl.c.o.d"
-  "/Users/fernando/dev/junkbox/cdraw/vendor/glfw-3.3.8/examples/offscreen.c" "examples/CMakeFiles/offscreen.dir/offscreen.c.o" "gcc" "examples/CMakeFiles/offscreen.dir/offscreen.c.o.d"
+  "/home/fernando/dev/cdraw/vendor/glfw-3.3.8/deps/glad_gl.c" "examples/CMakeFiles/offscreen.dir/__/deps/glad_gl.c.o" "gcc" "examples/CMakeFiles/offscreen.dir/__/deps/glad_gl.c.o.d"
+  "/home/fernando/dev/cdraw/vendor/glfw-3.3.8/examples/offscreen.c" "examples/CMakeFiles/offscreen.dir/offscreen.c.o" "gcc" "examples/CMakeFiles/offscreen.dir/offscreen.c.o.d"
+  "" "examples/offscreen" "gcc" "examples/CMakeFiles/offscreen.dir/link.d"
   )
 
-# Targets to which this target links.
-set(CMAKE_TARGET_LINKED_INFO_FILES
-  "/Users/fernando/dev/junkbox/cdraw/vendor/glfw-3.3.8/src/CMakeFiles/glfw.dir/DependInfo.cmake"
+# Targets to which this target links which contain Fortran sources.
+set(CMAKE_Fortran_TARGET_LINKED_INFO_FILES
+  )
+
+# Targets to which this target links which contain Fortran sources.
+set(CMAKE_Fortran_TARGET_FORWARD_LINKED_INFO_FILES
   )
 
 # Fortran module output directory.

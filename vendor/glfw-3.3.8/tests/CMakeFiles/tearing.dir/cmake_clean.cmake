@@ -1,9 +1,10 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/tearing.dir/link.d"
   "CMakeFiles/tearing.dir/__/deps/glad_gl.c.o"
   "CMakeFiles/tearing.dir/__/deps/glad_gl.c.o.d"
   "CMakeFiles/tearing.dir/tearing.c.o"
   "CMakeFiles/tearing.dir/tearing.c.o.d"
-  "tearing.app/Contents/MacOS/tearing"
+  "tearing"
   "tearing.pdb"
 )
 

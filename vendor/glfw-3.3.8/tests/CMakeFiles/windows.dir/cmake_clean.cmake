@@ -1,11 +1,12 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/windows.dir/link.d"
   "CMakeFiles/windows.dir/__/deps/getopt.c.o"
   "CMakeFiles/windows.dir/__/deps/getopt.c.o.d"
   "CMakeFiles/windows.dir/__/deps/glad_gl.c.o"
   "CMakeFiles/windows.dir/__/deps/glad_gl.c.o.d"
   "CMakeFiles/windows.dir/windows.c.o"
   "CMakeFiles/windows.dir/windows.c.o.d"
-  "windows.app/Contents/MacOS/windows"
+  "windows"
   "windows.pdb"
 )
 

@@ -1,4 +1,5 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/offscreen.dir/link.d"
   "CMakeFiles/offscreen.dir/__/deps/glad_gl.c.o"
   "CMakeFiles/offscreen.dir/__/deps/glad_gl.c.o.d"
   "CMakeFiles/offscreen.dir/offscreen.c.o"

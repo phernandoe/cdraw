@@ -1,4 +1,5 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/cursor.dir/link.d"
   "CMakeFiles/cursor.dir/__/deps/glad_gl.c.o"
   "CMakeFiles/cursor.dir/__/deps/glad_gl.c.o.d"
   "CMakeFiles/cursor.dir/cursor.c.o"
