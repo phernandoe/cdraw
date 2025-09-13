@@ -18,13 +18,14 @@ char *getFileContents(char *filePath)
 
   /* grab sufficient memory for the
   buffer to hold the text */
-  char *buffer = (char *)calloc(numbytes, sizeof(char));
+  char *buffer = (char *)calloc(numbytes + 1, sizeof(char));
 
   /* memory error */
   if (buffer == NULL) return NULL;
 
   /* copy all the text into the buffer */
   fread(buffer, sizeof(char), numbytes, infile);
+  buffer[numbytes] = '\0'; // Null terminate the string
   fclose(infile);
 
   return buffer;
