@@ -10,13 +10,13 @@ UTILS=src/util/*.c
 VERTEX=src/vertex/*.c
 
 BINS=build/glew/lib64/libGLEW.a build/glfw/src/libglfw3.a
-# TODO: Do I need these inlcudes here?
 VENDOR_INCLUDES=-Ivendor/glfw-3.3.8/include -Ibuild/glew/include
 
 # TARGET=-framework Cocoa -framework OpenGL -framework IOKit
-#
-# The above target is MacOS specific. I need to download the Linux versions of the glfw/glew libraries and add them to the Vendor folder
+
 TARGET=-lGLEW -lGL -lX11 -lpthread -lXrandr -lXi -ldl -lm
+
+UNAME_S := $(shell unane -s)
 
 all: glfw glew build-src
 

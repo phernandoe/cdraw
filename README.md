@@ -16,6 +16,14 @@ Requirements:
 ### TODO
 - [ ] `vertex` folder doesn't make sense
 - [ ] condense the `vendor` folder
+- [ ] introduce more rendering abstractions like so:
+    Renderer
+     ├── Window
+     ├── Shader
+     ├── Mesh
+     ├── Texture
+     ├── Grid
+     └── Camera
 
 #### References
 - https://docs.gl
